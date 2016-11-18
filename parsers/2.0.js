@@ -21,6 +21,9 @@ var getPropType = function (definition) {
     }
     if (definition.$ref) {
         var name = definition.$ref.match('#/definitions/(.*)')[1];
+        if (name === 'Object') { // avoid name collision with native Object type
+          name = 'APIObject';
+        }
         return name === 'undefined' ? missingRefPropType.toString() : name;
     }
     switch (definition.type) {
@@ -74,6 +77,9 @@ var modelReferences = function (definition) {
 
 var formatPropType = function (name, definition) {
     return 'export const ' + name + ' = ' + definition + '\n';
+    if (name === 'Object') { // avoid name collision with native Object type
+      name = 'APIObject';
+    }
 };
 
 module.exports = function (swagger) {
