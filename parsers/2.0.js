@@ -76,10 +76,11 @@ var modelReferences = function (definition) {
 };
 
 var formatPropType = function (name, definition) {
-    return 'export const ' + name + ' = ' + definition + '\n';
+    const unpackNestedType = new RegExp(/([^\[]*)\[([^\]]*)\]/g);
     if (name === 'Object') { // avoid name collision with native Object type
       name = 'APIObject';
     }
+    return 'export const ' + name.replace(unpackNestedType, "$1$2") + ' = ' + definition + ';\n';
 };
 
 module.exports = function (swagger) {
