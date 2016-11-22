@@ -17,8 +17,8 @@ var unknownPropType = function(props, propName, componentName) {
 
 var getPropType = function (definition) {
     if (definition.enum) {
-        return 'React.PropTypes.number'; // workaround due to REST API returning numbers for enums
-        // return 'React.PropTypes.oneOf(' + JSON.stringify(definition.enum, null, 2) + ')';
+        return 'PropTypes.number'; // workaround due to REST API returning numbers for enums
+        // return 'PropTypes.oneOf(' + JSON.stringify(definition.enum, null, 2) + ')';
     }
     if (definition.$ref) {
         var name = definition.$ref.match('#/definitions/(.*)')[1];
@@ -30,9 +30,9 @@ var getPropType = function (definition) {
     switch (definition.type) {
     case 'object':
         if(_.isEmpty(definition.properties)) {
-            return 'React.PropTypes.object';
+            return 'PropTypes.object';
         }
-        return 'React.PropTypes.shape({\n'
+        return 'PropTypes.shape({\n'
             + indent(_.map(definition.properties, function (property, name) {
                 var keyPropType = convertDefinitionObjectToPropTypes(property, name);
                 if (_.contains(definition.required || [], name)) {
@@ -42,14 +42,14 @@ var getPropType = function (definition) {
             }).join(',\n')) +
         '\n})';
     case 'array':
-        return 'React.PropTypes.arrayOf(' + getPropType(definition.items) + ')';
+        return 'PropTypes.arrayOf(' + getPropType(definition.items) + ')';
     case 'string':
-        return 'React.PropTypes.string';
+        return 'PropTypes.string';
     case 'integer':
     case 'number':
-        return 'React.PropTypes.number';
+        return 'PropTypes.number';
     case 'boolean':
-        return 'React.PropTypes.bool';
+        return 'PropTypes.bool';
     default:
         return unknownPropType.toString();
     }
@@ -85,7 +85,7 @@ var formatPropType = function (name, definition) {
 };
 
 module.exports = function (swagger) {
-    var header = "import React from 'react';\n";
+    var header = "import PropTypes from 'prop-types';\n"; // "import { PropTypes } from 'react';\n";
     console.log(header + '\n// generated from ' + swagger.url + '\n')
     var edges = _.map(swagger.models, function (model, name) {
         var e = modelReferences(model.definition).map(function(m) { return [m, name] });
