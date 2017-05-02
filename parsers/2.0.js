@@ -17,8 +17,7 @@ var unknownPropType = function(props, propName, componentName) {
 
 var getPropType = function (definition) {
     if (definition.enum) {
-        return 'PropTypes.number'; // workaround due to REST API returning numbers for enums
-        // return 'PropTypes.oneOf(' + JSON.stringify(definition.enum, null, 2) + ')';
+        return 'PropTypes.oneOf(' + JSON.stringify(definition.enum, null, 2) + ')';
     }
     if (definition.$ref) {
         var name = definition.$ref.match('#/definitions/(.*)')[1];
